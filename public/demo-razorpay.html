@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>H-Staff · Demo Checkout</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:#f4f5f8;font-family:Inter,Arial,sans-serif;color:#202534;display:grid;place-items:center;padding:20px}
+.card{width:min(430px,100%);background:#fff;border:1px solid #e5e7eb;border-radius:18px;padding:30px;box-shadow:0 16px 50px #18213b14}
+.brand{font-size:13px;letter-spacing:.12em;font-weight:800;color:#6b7280}.logo{font-size:26px;font-weight:800;margin:8px 0 22px;color:#202534}
+.pill{display:inline-block;background:#fff3cd;color:#775800;border-radius:30px;padding:7px 11px;font-size:12px;font-weight:800}
+h1{font-size:22px;margin:18px 0 8px}.muted{color:#697386;line-height:1.55;font-size:14px}
+.status{margin-top:22px;padding:16px;border-radius:12px;background:#f2f5ff;color:#35458a;font-weight:700}
+.spinner{width:22px;height:22px;border:3px solid #d9def7;border-top-color:#6545c5;border-radius:50%;display:inline-block;vertical-align:middle;margin-right:9px;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+small{display:block;margin-top:20px;color:#8991a0;line-height:1.5}
+</style></head>
+<body><main class="card">
+<div class="brand">H-STAFF PAYMENT EXPERIENCE</div><div class="logo">Checkout</div>
+<span class="pill">DEMO SIMULATION · NO REAL PAYMENT</span>
+<h1>Secure payment redirect</h1>
+<p class="muted">This screen demonstrates the external checkout step for your H-Staff presentation. No payment provider is connected and no money will be charged.</p>
+<div class="status"><span class="spinner"></span>Returning to H-Staff…</div>
+<small>Demo only. Payment status will remain <b>Unpaid</b>. This page is not operated by or affiliated with Razorpay.</small>
+</main>
+<script>
+(function(){
+ const params=new URLSearchParams(location.search);
+ const fallback=location.origin+'/#My%20Shifts';
+ let target=params.get('return')||fallback;
+ try { const u=new URL(target,location.origin); if(u.origin!==location.origin) target=fallback; else target=u.href; } catch { target=fallback; }
+ // Short visible pause to demonstrate the redirect, without requesting payment details.
+ setTimeout(()=>{ window.location.replace(target); },1600);
+})();
+</script></body></html>

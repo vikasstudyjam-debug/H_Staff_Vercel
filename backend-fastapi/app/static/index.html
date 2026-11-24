@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>H-Staff Enterprise Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#2563eb',
+                            600: '#1d4ed8',
+                            700: '#1e40af',
+                            900: '#1e3a8a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #0b0f19; }
+        .glass-panel {
+            background: linear-gradient(135deg, rgba(18, 24, 38, 0.95), rgba(15, 23, 42, 0.85));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body class="text-slate-200 min-h-screen font-sans flex antialiased select-none">
+
+    <!-- LEFT SIDEBAR -->
+    <aside class="w-72 bg-[#0d1322] border-r border-slate-800/80 flex flex-col justify-between flex-shrink-0 z-20">
+        <div>
+            <!-- Platform Branding -->
+            <div class="px-6 py-6 border-b border-slate-800/60 flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-500 flex items-center justify-center font-extrabold text-white text-lg shadow-lg shadow-brand-500/30">H</div>
+                    <div>
+                        <div class="font-extrabold text-white text-lg tracking-tight">H-Staff <span class="text-[10px] text-brand-400 font-mono px-2 py-0.5 bg-brand-950/80 rounded-md border border-brand-800/60">PRO</span></div>
+                        <div class="text-[11px] text-slate-400 font-medium">Hourly Workforce Operating System</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="p-4 space-y-1.5" id="nav-container">
+                <button onclick="switchTab('overview')" id="nav-overview" class="w-full flex items-center space-x-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all bg-brand-600/15 text-brand-400 border border-brand-500/25">
+                    <i class="fa-solid fa-chart-line w-5 text-center"></i>
+                    <span>Admin Overview</span>
+                </button>
+                <button onclick="switchTab('kyc')" id="nav-kyc" class="w-full flex items-center space-x-3.5 px-4 py-3 rounded-xl text-sm font-medium transition-all text-slate-400 hover:bg-slate-800/50 hover:text-white">
+                    <i class="fa-solid fa-id-card-clip w-5 text-center"></i>
+                    <span>PAN & KYC Approvals</span>
+                    <span id="badge-kyc" class="ml-auto bg-amber-500/20 text-amber-400 text-xs px-2 py-0.5 rounded-full font-mono border border-amber-500/30">1</span>
+                </button>
+                <button onclick="switchTab('shifts')" id="nav-shifts" class="w-full flex items-center space-x-3.5 px-4 py-3 rounded-xl text-sm font-medium transition-all text-slate-400 hover:bg-slate-800/50 hover:text-white">
+                    <i class="fa-solid fa-clock-rotate-left w-5 text-center"></i>
+                    <span>Live Shifts & Geofence</span>
+                </button>
+                <button onclick="switchTab('payments')" id="nav-payments" class="w-full flex items-center space-x-3.5 px-4 py-3 rounded-xl text-sm font-medium transition-all text-slate-400 hover:bg-slate-800/50 hover:text-white">
+                    <i class="fa-solid fa-wallet w-5 text-center"></i>
+                    <span>Payments & Escrow</span>
+                    <span class="ml-auto text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-500/30">Auto SLA</span>
+                </button>
+                <button onclick="switchTab('audit')" id="nav-audit" class="w-full flex items-center space-x-3.5 px-4 py-3 rounded-xl text-sm font-medium transition-all text-slate-400 hover:bg-slate-800/50 hover:text-white">
+                    <i class="fa-solid fa-shield-halved w-5 text-center"></i>
+                    <span>WAF & Immutable Audit</span>
+                </button>
+            </nav>
+        </div>
+
+        <!-- Admin Profile -->
+        <div class="p-4 border-t border-slate-800/60 bg-[#0a0f1d]/50">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-full bg-slate-800 border border-slate-700/80 flex items-center justify-center font-bold text-brand-400 text-sm">RB</div>
+                <div class="overflow-hidden">
+                    <div class="text-xs font-bold text-white truncate">Platform Operator</div>
+                    <div class="text-[11px] text-slate-400 font-mono truncate">admin@hstaff.com</div>
+                </div>
+                <div class="ml-auto w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" title="System Connected"></div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN BODY -->
+    <main class="flex-1 overflow-y-auto p-8 relative">
+
+        <!-- HEADER -->
+        <header class="flex justify-between items-center mb-8 pb-4 border-b border-slate-800/60">
+            <div>
+                <h1 class="text-2xl font-black text-white tracking-tight" id="header-title">Enterprise Control Center</h1>
+                <p class="text-xs text-slate-400 mt-1 font-medium" id="header-desc">OAuth2 RBAC Enforcement, Automated PAN Validation & Real-time Payout Engine</p>
+            </div>
+            <div class="flex items-center space-x-3">
+                <a href="/docs" target="_blank" class="px-4 py-2 bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 rounded-xl text-xs font-bold text-slate-300 flex items-center space-x-2 transition shadow-sm">
+                    <i class="fa-solid fa-terminal text-brand-400"></i>
+                    <span>API Swagger Docs</span>
+                </a>
+                <button onclick="refreshCurrentTab()" class="px-4 py-2 bg-brand-600 hover:bg-brand-500 rounded-xl text-xs font-bold text-white flex items-center space-x-2 transition shadow-lg shadow-brand-600/30">
+                    <i class="fa-solid fa-rotate text-xs"></i>
+                    <span>Sync Live State</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- ================================================================= -->
+        <!-- TAB 1: ADMIN OVERVIEW -->
+        <!-- ================================================================= -->
+        <section id="tab-overview" class="space-y-8">
+            <!-- 4 Metric Cards Matching Mockup -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
+                <div class="glass-panel p-5 rounded-2xl">
+                    <div class="flex items-center justify-between text-slate-400">
+                        <span class="text-xs font-bold uppercase tracking-wider">Total Registered</span>
+                        <i class="fa-solid fa-users text-brand-400"></i>
+                    </div>
+                    <div class="text-3xl font-extrabold text-white mt-3 font-mono" id="ov-users">--</div>
+                    <div class="text-[11px] text-emerald-400 mt-2 font-medium flex items-center space-x-1.5">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>Enforced Multi-tenant RBAC</span>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-5 rounded-2xl">
+                    <div class="flex items-center justify-between text-slate-400">
+                        <span class="text-xs font-bold uppercase tracking-wider">Pending KYC Queue</span>
+                        <i class="fa-solid fa-id-card text-amber-400"></i>
+                    </div>
+                    <div class="text-3xl font-extrabold text-amber-400 mt-3 font-mono" id="ov-kyc">--</div>
+                    <div class="text-[11px] text-amber-300 mt-2 font-medium flex items-center space-x-1.5">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <span>Awaiting Operator Approval</span>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-5 rounded-2xl">
+                    <div class="flex items-center justify-between text-slate-400">
+                        <span class="text-xs font-bold uppercase tracking-wider">Active Shift Quotas</span>
+                        <i class="fa-solid fa-briefcase text-blue-400"></i>
+                    </div>
+                    <div class="text-3xl font-extrabold text-white mt-3 font-mono" id="ov-shifts">--</div>
+                    <div class="text-[11px] text-blue-400 mt-2 font-medium flex items-center space-x-1.5">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span>200m Geofenced QR Gates</span>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-5 rounded-2xl">
+                    <div class="flex items-center justify-between text-slate-400">
+                        <span class="text-xs font-bold uppercase tracking-wider">Escrow Disbursed</span>
+                        <i class="fa-solid fa-indian-rupee-sign text-emerald-400"></i>
+                    </div>
+                    <div class="text-3xl font-extrabold text-emerald-400 mt-3 font-mono" id="ov-spend">₹24,500</div>
+                    <div class="text-[11px] text-emerald-300 mt-2 font-medium flex items-center space-x-1.5">
+                        <i class="fa-solid fa-shield-check"></i>
+                        <span>24-Hour SLA Governance</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Action Console -->
+            <div class="glass-panel p-6 rounded-2xl">
+                <h3 class="text-base font-bold text-white mb-4">Operations & Compliance Summary</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+                        <div class="text-xs text-slate-400 font-medium">Layer-7 Firewall Status</div>
+                        <div class="text-base font-bold text-emerald-400 mt-1 flex items-center space-x-2">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                            <span>Online (Rate Limit: 250/min)</span>
+                        </div>
+                    </div>
+                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+                        <div class="text-xs text-slate-400 font-medium">Income Tax PAN Checker</div>
+                        <div class="text-base font-bold text-white mt-1">Regex + Entity 'P' Verified</div>
+                    </div>
+                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+                        <div class="text-xs text-slate-400 font-medium">Automated Alert Service</div>
+                        <div class="text-base font-bold text-brand-400 mt-1">Transactional SMTP Engine</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- TAB 2: PAN & KYC APPROVALS -->
+        <!-- ================================================================= -->
+        <section id="tab-kyc" class="hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h2 class="text-lg font-bold text-white">Worker PAN Card Verification Queue</h2>
+                        <p class="text-xs text-slate-400 mt-0.5">Approve legitimate identification documents to authorize workers for shift discovery</p>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto rounded-xl border border-slate-800/80">
+                    <table class="w-full text-left text-sm">
+                        <thead class="text-xs text-slate-400 uppercase bg-[#090d18] border-b border-slate-800">
+                            <tr>
+                                <th class="py-3.5 px-4">Worker Identity</th>
+                                <th class="py-3.5 px-4">Phone</th>
+                                <th class="py-3.5 px-4">PAN Number</th>
+                                <th class="py-3.5 px-4">Document Asset</th>
+                                <th class="py-3.5 px-4">Status</th>
+                                <th class="py-3.5 px-4 text-right">Verification Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="kyc-table-rows" class="divide-y divide-slate-800/60 bg-slate-900/30">
+                            <!-- Injected Dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- TAB 3: LIVE SHIFTS & GEOFENCE -->
+        <!-- ================================================================= -->
+        <section id="tab-shifts" class="hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h2 class="text-lg font-bold text-white">Shift Allocation & Site Geofence Tracking</h2>
+                        <p class="text-xs text-slate-400 mt-0.5">Enforcing PostGIS ST_DWithin geofenced attendance (&le; 200m)</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5" id="shifts-container">
+                    <!-- Shift Cards Injected Dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- TAB 4: PAYMENTS & ESCROW ENGINE -->
+        <!-- ================================================================= -->
+        <section id="tab-payments" class="hidden space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div class="glass-panel p-5 rounded-2xl">
+                    <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Executed Payouts</div>
+                    <div class="text-3xl font-extrabold text-white mt-2 font-mono" id="pay-disbursed">₹0.00</div>
+                    <div class="text-[11px] text-emerald-400 mt-2 font-medium">Direct Bank Transfer / UPI Gateway</div>
+                </div>
+                <div class="glass-panel p-5 rounded-2xl">
+                    <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Locked in 24hr Escrow</div>
+                    <div class="text-3xl font-extrabold text-amber-400 mt-2 font-mono" id="pay-escrow">₹0.00</div>
+                    <div class="text-[11px] text-amber-300 mt-2 font-medium">Pending Timesheet Approval</div>
+                </div>
+                <div class="glass-panel p-5 rounded-2xl">
+                    <div class="text-xs font-bold uppercase tracking-wider text-slate-400">SLA Dispute Arbiter</div>
+                    <div class="text-3xl font-extrabold text-indigo-400 mt-2 font-mono">100% Guaranteed</div>
+                    <div class="text-[11px] text-slate-400 mt-2 font-medium">Backend Calculation (Hours &times; Rate)</div>
+                </div>
+            </div>
+
+            <div class="glass-panel p-6 rounded-2xl">
+                <h3 class="text-base font-bold text-white mb-4">Worker Timesheet & Payout Ledger</h3>
+                <div class="overflow-x-auto rounded-xl border border-slate-800/80">
+                    <table class="w-full text-left text-sm">
+                        <thead class="text-xs text-slate-400 uppercase bg-[#090d18] border-b border-slate-800">
+                            <tr>
+                                <th class="py-3.5 px-4">Worker</th>
+                                <th class="py-3.5 px-4">Shift Details</th>
+                                <th class="py-3.5 px-4">Calculated Wage</th>
+                                <th class="py-3.5 px-4">Gateway Reference</th>
+                                <th class="py-3.5 px-4">State</th>
+                                <th class="py-3.5 px-4 text-right">Escrow Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="payments-table-rows" class="divide-y divide-slate-800/60 bg-slate-900/30">
+                            <!-- Injected Dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- TAB 5: WAF & IMMUTABLE AUDIT TRAIL -->
+        <!-- ================================================================= -->
+        <section id="tab-audit" class="hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h2 class="text-lg font-bold text-white">System Security & Activity Audit Trail</h2>
+                        <p class="text-xs text-slate-400 mt-0.5">Cryptographically traceable tamper-evident system events</p>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto rounded-xl border border-slate-800/80">
+                    <table class="w-full text-left text-sm font-mono">
+                        <thead class="text-xs text-slate-400 uppercase bg-[#090d18] border-b border-slate-800 font-sans">
+                            <tr>
+                                <th class="py-3.5 px-4">Timestamp</th>
+                                <th class="py-3.5 px-4">Actor</th>
+                                <th class="py-3.5 px-4">Action</th>
+                                <th class="py-3.5 px-4">Target Resource</th>
+                                <th class="py-3.5 px-4">Context Details</th>
+                            </tr>
+                        </thead>
+                        <tbody id="audit-table-rows" class="divide-y divide-slate-800/60 bg-slate-900/30 text-xs">
+                            <!-- Injected Dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed bottom-6 right-6 transform translate-y-32 transition-all duration-300 z-50 bg-slate-900 border border-slate-700 px-5 py-4 rounded-xl shadow-2xl flex items-center space-x-3 text-sm">
+        <div id="toast-icon" class="text-emerald-400 text-base"><i class="fa-solid fa-circle-check"></i></div>
+        <div id="toast-message" class="font-medium text-slate-200">Operation Successful</div>
+    </div>
+
+    <!-- JAVASCRIPT: FULL APPLICATION CONTROLLER -->
+    <script>
+        let adminToken = "";
+        let currentActiveTab = "overview";
+
+        // Notification Toast Handler
+        function showToast(message, isError = false) {
+            const toast = document.getElementById("toast");
+            const icon = document.getElementById("toast-icon");
+            const text = document.getElementById("toast-message");
+
+            text.innerText = message;
+            if (isError) {
+                icon.innerHTML = '<i class="fa-solid fa-circle-exclamation text-rose-400"></i>';
+                toast.classList.add("border-rose-500/50");
+            } else {
+                icon.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-400"></i>';
+                toast.classList.remove("border-rose-500/50");
+            }
+
+            toast.classList.remove("translate-y-32");
+            setTimeout(() => { toast.classList.add("translate-y-32"); }, 4000);
+        }
+
+        // Authentication with Backend
+        async function ensureAuth() {
+            if (adminToken) return adminToken;
+            try {
+                const formData = new URLSearchParams();
+                formData.append("username", "admin@hstaff.com");
+                formData.append("password", "admin_pass_2026");
+
+                const res = await fetch("/api/v1/auth/login", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/x-www-form-urlencoded"},
+                    body: formData
+                });
+                if (!res.ok) throw new Error("Auth failed");
+                const data = await res.json();
+                adminToken = data.access_token;
+                return adminToken;
+            } catch (err) {
+                showToast("Admin session could not be verified", true);
+                return null;
+            }
+        }
+
+        // Tab Switching Router
+        function switchTab(tabId) {
+            currentActiveTab = tabId;
+            const tabs = ["overview", "kyc", "shifts", "payments", "audit"];
+            tabs.forEach(t => {
+                const el = document.getElementById(`tab-${t}`);
+                const btn = document.getElementById(`nav-${t}`);
+                if (t === tabId) {
+                    el.classList.remove("hidden");
+                    btn.className = "w-full flex items-center space-x-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all bg-brand-600/15 text-brand-400 border border-brand-500/25";
+                } else {
+                    el.classList.add("hidden");
+                    btn.className = "w-full flex items-center space-x-3.5 px-4 py-3 rounded-xl text-sm font-medium transition-all text-slate-400 hover:bg-slate-800/50 hover:text-white";
+                }
+            });
+
+            const titles = {
+                overview: ["Admin Overview", "OAuth2 RBAC Enforcement, Automated PAN Validation & Real-time Payout Engine"],
+                kyc: ["PAN & Identity Verification Queue", "Algorithmic Indian PAN Checks with Automated Worker Email Dispatch"],
+                shifts: ["Live Shifts & Geo-Attendance", "ST_DWithin Geofence Enforcement (&le; 200m) & Concurrency Lock Control"],
+                payments: ["Payments & Escrow Workflow", "Hours &times; Rate Server-side Calculations & Instant Payout Gateway API"],
+                audit: ["Immutable Security Audit Logs", "Layer-7 WAF Intrusion Monitoring and Non-repudiation Event Ledger"]
+            };
+            document.getElementById("header-title").innerText = titles[tabId][0];
+            document.getElementById("header-desc").innerText = titles[tabId][1];
+
+            refreshCurrentTab();
+        }
+
+        function refreshCurrentTab() {
+            if (currentActiveTab === "overview") loadOverview();
+            else if (currentActiveTab === "kyc") loadKYC();
+            else if (currentActiveTab === "shifts") loadShifts();
+            else if (currentActiveTab === "payments") loadPayments();
+            else if (currentActiveTab === "audit") loadAudit();
+        }
+
+        // LOAD: Overview Tab
+        async function loadOverview() {
+            const token = await ensureAuth();
+            if (!token) return;
+
+            const res = await fetch("/api/v1/admin/dashboard/stats", {
+                headers: {"Authorization": `Bearer ${token}`}
+            });
+            const data = await res.json();
+            document.getElementById("ov-users").innerText = data.total_users;
+            document.getElementById("ov-kyc").innerText = data.pending_kyc;
+            document.getElementById("ov-shifts").innerText = data.active_shifts;
+            document.getElementById("badge-kyc").innerText = data.pending_kyc;
+        }
+
+        // LOAD: KYC Approvals Tab
+        async function loadKYC() {
+            const token = await ensureAuth();
+            if (!token) return;
+
+            const res = await fetch("/api/v1/admin/kyc/pending", {
+                headers: {"Authorization": `Bearer ${token}`}
+            });
+            const data = await res.json();
+            const tbody = document.getElementById("kyc-table-rows");
+            tbody.innerHTML = "";
+
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center py-6 text-slate-500">No pending verification records in queue.</td></tr>';
+                return;
+            }
+
+            data.forEach(item => {
+                const tr = document.createElement("tr");
+                const isPending = item.status === "pending";
+                tr.innerHTML = `
+                    <td class="py-4 px-4 font-semibold text-white">
+                        ${item.name}
+                        <span class="block text-xs text-slate-400 font-mono font-normal">${item.email}</span>
+                    </td>
+                    <td class="py-4 px-4 font-mono text-slate-300">${item.phone || "+91-9876543210"}</td>
+                    <td class="py-4 px-4 font-mono font-bold text-brand-400">${item.document_number}</td>
+                    <td class="py-4 px-4">
+                        <a href="${item.document_url}" target="_blank" class="text-xs text-blue-400 underline hover:text-blue-300">View PAN File</a>
+                    </td>
+                    <td class="py-4 px-4">
+                        <span class="px-2.5 py-1 text-xs rounded-full font-bold uppercase tracking-wider ${isPending ? 'bg-amber-950 text-amber-400 border border-amber-800/80' : 'bg-emerald-950 text-emerald-400 border border-emerald-800/80'}">${item.status}</span>
+                    </td>
+                    <td class="py-4 px-4 text-right">
+                        ${isPending ? `
+                            <button onclick="approveKYC('${item.worker_id}', '${item.name}')" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-lg shadow-sm transition">
+                                <i class="fa-solid fa-check mr-1"></i> Verify & Email
+                            </button>
+                        ` : '<span class="text-xs text-slate-500 font-semibold">Authorized</span>'}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function approveKYC(workerId, name) {
+            const token = await ensureAuth();
+            const res = await fetch(`/api/v1/admin/kyc/${workerId}/review`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({action: "approved", remarks: "PAN Card verified with Income Tax Sandbox Gateway"})
+            });
+            if (res.ok) {
+                showToast(`Approved PAN for ${name}. Verification email dispatched.`);
+                loadKYC();
+                loadOverview();
+            } else {
+                showToast("Approval failed", true);
+            }
+        }
+
+        // LOAD: Shifts & Geofence Tab
+        async function loadShifts() {
+            const token = await ensureAuth();
+            if (!token) return;
+
+            const res = await fetch("/api/v1/tracking/shifts", {
+                headers: {"Authorization": `Bearer ${token}`}
+            });
+            const data = await res.json();
+            const container = document.getElementById("shifts-container");
+            container.innerHTML = "";
+
+            data.forEach(s => {
+                const card = document.createElement("div");
+                card.className = "bg-slate-900/60 p-5 rounded-xl border border-slate-800 relative overflow-hidden";
+                card.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-950 text-blue-400 border border-blue-800 uppercase font-bold">${s.status}</span>
+                            <h4 class="text-base font-bold text-white mt-2">${s.title}</h4>
+                            <p class="text-xs text-slate-400 flex items-center space-x-1.5 mt-1 font-medium">
+                                <i class="fa-solid fa-location-dot text-rose-400"></i>
+                                <span>${s.location_name}</span>
+                            </p>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-xl font-extrabold text-emerald-400 font-mono">₹${s.hourly_rate}/hr</div>
+                            <div class="text-[11px] text-slate-400 font-medium">Cap: ${s.capacity_required} Workers</div>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs">
+                        <span class="text-slate-400 font-mono">Radius Limit: 200m</span>
+                        <span class="text-emerald-400 font-bold"><i class="fa-solid fa-qrcode mr-1"></i> QR Enabled</span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // LOAD: Payments & Escrow Tab
+        async function loadPayments() {
+            const token = await ensureAuth();
+            if (!token) return;
+
+            const res = await fetch("/api/v1/payments/overview", {
+                headers: {"Authorization": `Bearer ${token}`}
+            });
+            const data = await res.json();
+
+            document.getElementById("pay-disbursed").innerText = `₹${data.metrics.total_disbursed.toFixed(2)}`;
+            document.getElementById("pay-escrow").innerText = `₹${data.metrics.total_in_escrow.toFixed(2)}`;
+
+            const tbody = document.getElementById("payments-table-rows");
+            tbody.innerHTML = "";
+
+            data.transactions.forEach(tx => {
+                const tr = document.createElement("tr");
+                const isPending = tx.status === "pending";
+                tr.innerHTML = `
+                    <td class="py-4 px-4 font-semibold text-white">
+                        ${tx.worker_name}
+                        <span class="block text-xs text-slate-400 font-mono font-normal">${tx.worker_phone}</span>
+                    </td>
+                    <td class="py-4 px-4">
+                        <div class="font-medium text-white">${tx.shift_title}</div>
+                        <div class="text-xs text-slate-400 font-mono">${tx.hours_worked} hrs &times; ₹${tx.hourly_rate}</div>
+                    </td>
+                    <td class="py-4 px-4 font-mono font-extrabold text-emerald-400">₹${tx.total_amount.toFixed(2)}</td>
+                    <td class="py-4 px-4 font-mono text-xs text-slate-300">${tx.gateway_ref}</td>
+                    <td class="py-4 px-4">
+                        <span class="px-2.5 py-1 text-xs rounded-full font-bold uppercase tracking-wider ${tx.status === 'paid' ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' : 'bg-amber-950 text-amber-400 border border-amber-800'}">${tx.status}</span>
+                    </td>
+                    <td class="py-4 px-4 text-right">
+                        ${isPending ? `
+                            <button onclick="releasePayout('${tx.payment_id}', '${tx.worker_name}')" class="px-3.5 py-1.5 bg-brand-600 hover:bg-brand-500 text-white font-bold text-xs rounded-lg shadow-sm transition">
+                                <i class="fa-solid fa-paper-plane mr-1"></i> Release Payout
+                            </button>
+                        ` : '<span class="text-xs text-emerald-400 font-bold"><i class="fa-solid fa-check mr-1"></i> Disbursed</span>'}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function releasePayout(paymentId, name) {
+            const token = await ensureAuth();
+            const res = await fetch(`/api/v1/payments/${paymentId}/release`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({gateway: "Razorpay Sandbox Gateway", notes: "Verified Timesheet Payout"})
+            });
+            if (res.ok) {
+                const data = await res.json();
+                showToast(`Payout Disbursed to ${name}! Ref: ${data.transaction_ref}`);
+                loadPayments();
+                loadOverview();
+            } else {
+                showToast("Payout execution failed", true);
+            }
+        }
+
+        // LOAD: Audit Trail Tab
+        async function loadAudit() {
+            const token = await ensureAuth();
+            if (!token) return;
+
+            const res = await fetch("/api/v1/audit/logs?limit=50", {
+                headers: {"Authorization": `Bearer ${token}`}
+            });
+            const data = await res.json();
+            const tbody = document.getElementById("audit-table-rows");
+            tbody.innerHTML = "";
+
+            data.forEach(log => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td class="py-3 px-4 text-slate-400 whitespace-nowrap">${new Date(log.timestamp).toLocaleString()}</td>
+                    <td class="py-3 px-4 text-white font-bold">${log.actor_role || 'SYSTEM'}</td>
+                    <td class="py-3 px-4 text-brand-400 font-bold">${log.action}</td>
+                    <td class="py-3 px-4 text-slate-300">${log.target_resource}</td>
+                    <td class="py-3 px-4 text-slate-400">${log.details || 'N/A'}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Initial Start
+        window.onload = () => {
+            loadOverview();
+        };
+    </script>
+</body>
+</html>

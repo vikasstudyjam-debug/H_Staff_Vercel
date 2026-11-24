@@ -1,0 +1,73 @@
+# Dependencies
+node_modules/
+server/node_modules/
+
+# Environment files
+.env
+.env*.local
+server/.env
+server/.env*.local
+backend-fastapi/.env
+*.env
+
+# Build outputs
+dist/
+dist-ssr/
+build/
+.hstaff-build/
+*.local
+
+# Logs and temporary files
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+tmp/
+temp/
+*.tmp
+
+# Runtime data, local databases and generated secrets
+server/data/
+backend-fastapi/data/
+*.db
+*.db-shm
+*.db-wal
+.*_secret
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+*.egg-info/
+
+# Editor & OS files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Excluded development notes, documentation folder, and presentation files
+docs/
+/*.txt
+!backend-fastapi/requirements.txt
+/*.pptx
+HOMEPAGE_CONTENT_CORRECTION.md
+PORTAL_DESIGN_UPDATE.md
+PORTAL_LAYOUT_REDESIGN.md
+RAZORPAY_SETUP.md
+UI_REFINEMENT_PASS_2.md
